@@ -13,6 +13,6 @@ public class HanoiDisc implements Comparable<HanoiDisc> {
 
 	@Override
 	public int compareTo(HanoiDisc o) {
-		return o.getDiameter() == this.diameter ? 0 : o.getDiameter() < this.diameter ? 1 : -1;
+		return this.diameter.compareTo(o.getDiameter());
 	}	
 }

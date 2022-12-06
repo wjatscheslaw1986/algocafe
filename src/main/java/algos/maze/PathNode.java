@@ -1,9 +1,25 @@
 package algos.maze;
 
 public class PathNode<T> implements Comparable<PathNode<T>> {
-    final T state;
-    PathNode<T> parent;
-    double cost, heuristic;
+    private final T state;
+    private PathNode<T> parent;
+    private double cost, heuristic;
+
+    public T getState() {
+        return state;
+    }
+
+    public PathNode<T> getParent() {
+        return parent;
+    }
+
+    public double getCost() {
+        return cost;
+    }
+
+    public double getHeuristic() {
+        return heuristic;
+    }
 
     public PathNode(T state, PathNode<T> parent) {
         this(state, parent, .0d, .0d);
