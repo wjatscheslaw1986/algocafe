@@ -5,9 +5,7 @@ package algos.graph;
 
 import algos.graph.exception.GraphInstantiationException;
 import algos.graph.objects.*;
-import algos.graph.specialized.CityWeightedAdjacencyMatrixDirectedGraph;
-import algos.graph.specialized.CityWeightedAdjacencyMatrixGraph;
-import algos.graph.specialized.CrossroadsWeightedAdjacencyMatrixGraph;
+import algos.graph.specialized.*;
 import algos.maze.PathNode;
 import algos.maze.PathNodeUtil;
 import org.junit.jupiter.api.Assertions;
@@ -15,9 +13,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static algos.graph.objects.City.*;
 
@@ -186,9 +186,55 @@ public class BFSTests {
     }
 
     @Test
+    public void bfsIncidentalityListDirectedGraphTest() throws GraphInstantiationException {
+
+        IncidentalityListDirectedGraph<CityNode, Arc> orientedGraph =
+                new IncidentalityListDirectedGraph<CityNode, Arc>(new ArrayList<>(List.of(someNodes)));
+
+        orientedGraph.connectNodes(0, 1);
+        orientedGraph.connectNodes(1, 2);
+        orientedGraph.connectNodes(0, 3);
+        orientedGraph.connectNodes(0, 1);
+        orientedGraph.connectNodes(0, 1);
+        orientedGraph.connectNodes(0, 4);
+        orientedGraph.connectNodes(4, 3);
+        orientedGraph.connectNodes(0, 5);
+        orientedGraph.connectNodes(5, 6);
+        orientedGraph.connectNodes(4, 7);
+        orientedGraph.connectNodes(5, 14);
+        orientedGraph.connectNodes(14, 8);
+        orientedGraph.connectNodes(8, 7);
+
+        for (int i = 0; i < someNodes.length; i++)
+            Assertions.assertEquals(i, orientedGraph.indexOf(someNodes[i]));
+
+        PathNode<CityNode> bfsResult = PathNodeUtil.bfs(someNodes[0], c -> orientedGraph.indexOf(c) == orientedGraph.indexOf(someNodes[7]), orientedGraph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(bfsResult);
+        Assertions.assertEquals(3, PathNodeUtil.nodeToPath(bfsResult).size());
+
+        bfsResult = PathNodeUtil.bfs(someNodes[0], c -> orientedGraph.indexOf(c) == orientedGraph.indexOf(someNodes[2]), orientedGraph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(bfsResult);
+        Assertions.assertEquals(3, PathNodeUtil.nodeToPath(bfsResult).size());
+
+        bfsResult = PathNodeUtil.bfs(someNodes[2], c -> orientedGraph.indexOf(c) == orientedGraph.indexOf(someNodes[7]), orientedGraph::successorsOf, stepsCounter);
+        Assertions.assertNull(bfsResult);
+        orientedGraph.connectNodes(2, 1);
+        orientedGraph.connectNodes(1, 0);
+
+        bfsResult = PathNodeUtil.bfs(someNodes[2], c -> orientedGraph.indexOf(c) == orientedGraph.indexOf(someNodes[7]), orientedGraph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(bfsResult);
+        Assertions.assertEquals(5, PathNodeUtil.nodeToPath(bfsResult).size());
+        orientedGraph.disconnectNodes(0, 4);
+
+        bfsResult = PathNodeUtil.bfs(someNodes[2], c -> orientedGraph.indexOf(c) == orientedGraph.indexOf(someNodes[7]), orientedGraph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(bfsResult);
+        Assertions.assertEquals(7, PathNodeUtil.nodeToPath(bfsResult).size());
+    }
+
+    @Test
     public void bfsWeightedAdjacencyMatrixGraphTest() throws GraphInstantiationException {
 
-        CityWeightedAdjacencyMatrixGraph<CityNode, WeightedRib> weightedCityGraph = new CityWeightedAdjacencyMatrixGraph<CityNode, WeightedRib>(allNodes, weightedAdjacency);
+        CityWeightedAdjacencyMatrixGraph<CityNode, WeightedRib> weightedCityGraph = new CityWeightedAdjacencyMatrixGraph<CityNode, WeightedRib>(allNodes, new double[allNodes.length][allNodes.length]);
 
         PathNode<CityNode> forth;
         PathNode<CityNode> back;
@@ -198,13 +244,13 @@ public class BFSTests {
         Assertions.assertNull(forth);
         Assertions.assertNull(back);
 
-        weightedAdjacency[0][4] = 193.0d;
+        weightedCityGraph.connectNodes(weightedCityGraph.indexOf(SAINT_PETERSBURG), weightedCityGraph.indexOf(GREAT_NOVGOROD), 193.0d);
         forth = PathNodeUtil.bfs(allNodes[0], c -> weightedCityGraph.indexOf(c) == weightedCityGraph.indexOf(GREAT_NOVGOROD), weightedCityGraph::successorsOf, stepsCounter);
         back = PathNodeUtil.bfs(allNodes[4], c -> weightedCityGraph.indexOf(c) == weightedCityGraph.indexOf(SAINT_PETERSBURG), weightedCityGraph::successorsOf, stepsCounter);
         Assertions.assertNotNull(forth);
         Assertions.assertNotNull(back);
 
-        weightedAdjacency[4][0] = 193.0d;
+        weightedCityGraph.connectNodes(weightedCityGraph.indexOf(GREAT_NOVGOROD), weightedCityGraph.indexOf(SAINT_PETERSBURG), 193.0d);
         forth = PathNodeUtil.bfs(allNodes[0], c -> weightedCityGraph.indexOf(c) == weightedCityGraph.indexOf(GREAT_NOVGOROD), weightedCityGraph::successorsOf, stepsCounter);
         back = PathNodeUtil.bfs(allNodes[4], c -> weightedCityGraph.indexOf(c) == weightedCityGraph.indexOf(SAINT_PETERSBURG), weightedCityGraph::successorsOf, stepsCounter);
         Assertions.assertNotNull(forth);
@@ -235,51 +281,150 @@ public class BFSTests {
     }
 
     @Test
-    public void bfsWeightedAdjacencyMatrixDirectedGraphTest() throws GraphInstantiationException {
+    public void bfsIncidentalityListMatrixGraphTest() {
 
-        CityWeightedAdjacencyMatrixDirectedGraph<CityNode, WeightedArc> weightedOrientedCityGraph =
-                new CityWeightedAdjacencyMatrixDirectedGraph<CityNode, WeightedArc>(allNodes, weightedAdjacency);
+        CityWeightedIncidentalityListGraph<CityNode, WeightedRib> graph = new CityWeightedIncidentalityListGraph<CityNode, WeightedRib>(new ArrayList<>(List.of(allNodes)));
 
         PathNode<CityNode> forth;
         PathNode<CityNode> back;
 
-        forth = PathNodeUtil.bfs(allNodes[0], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(GREAT_NOVGOROD), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        back = PathNodeUtil.bfs(allNodes[4], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph::successorsOf, stepsCounter);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
         Assertions.assertNull(forth);
         Assertions.assertNull(back);
 
-        weightedAdjacency[0][4] = 193.0d;
-        forth = PathNodeUtil.bfs(allNodes[0], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(GREAT_NOVGOROD), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        back = PathNodeUtil.bfs(allNodes[4], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        Assertions.assertNotNull(forth);
-        Assertions.assertNull(back);
-
-        weightedAdjacency[4][0] = 193.0d;
-        forth = PathNodeUtil.bfs(allNodes[0], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(GREAT_NOVGOROD), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        back = PathNodeUtil.bfs(allNodes[4], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph::successorsOf, stepsCounter);
+        graph.connectNodes(graph.nodeAt(graph.indexOf(GREAT_NOVGOROD)), graph.nodeAt(graph.indexOf(SAINT_PETERSBURG)), 193.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
         Assertions.assertNotNull(forth);
         Assertions.assertNotNull(back);
 
-        forth = PathNodeUtil.bfs(allNodes[0], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(MOSCOW), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        back = PathNodeUtil.bfs(allNodes[6], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph::successorsOf, stepsCounter);
+        graph.connectNodes(graph.nodeAt(graph.indexOf(SAINT_PETERSBURG)), graph.nodeAt(graph.indexOf(GREAT_NOVGOROD)), 193.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNotNull(back);
+
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
         Assertions.assertNull(forth);
         Assertions.assertNull(back);
 
-        weightedOrientedCityGraph.connectNodes(weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph.indexOf(MOSCOW), 710.0d);
-        forth = PathNodeUtil.bfs(allNodes[0], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(MOSCOW), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        back = PathNodeUtil.bfs(allNodes[6], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        Assertions.assertNotNull(forth);
-        Assertions.assertNull(back);
-
-        weightedOrientedCityGraph.connectNodes(weightedOrientedCityGraph.indexOf(MOSCOW), weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), 710.0d);
-        forth = PathNodeUtil.bfs(allNodes[0], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(MOSCOW), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        back = PathNodeUtil.bfs(allNodes[6], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph::successorsOf, stepsCounter);
+        graph.connectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(MOSCOW), 710.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
         Assertions.assertNotNull(forth);
         Assertions.assertNotNull(back);
 
-        weightedOrientedCityGraph.disconnectNodes(weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph.indexOf(MOSCOW));
-        forth = PathNodeUtil.bfs(allNodes[0], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(MOSCOW), weightedOrientedCityGraph::successorsOf, stepsCounter);
-        back = PathNodeUtil.bfs(allNodes[6], c -> weightedOrientedCityGraph.indexOf(c) == weightedOrientedCityGraph.indexOf(SAINT_PETERSBURG), weightedOrientedCityGraph::successorsOf, stepsCounter);
+        graph.connectNodes(graph.indexOf(MOSCOW), graph.indexOf(SAINT_PETERSBURG), 710.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNotNull(back);
+
+        graph.disconnectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(MOSCOW));
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNull(forth);
+        Assertions.assertNull(back);
+    }
+
+    @Test
+    public void bfsWeightedAdjacencyMatrixDirectedGraphTest() throws GraphInstantiationException {
+
+        CityWeightedAdjacencyMatrixDirectedGraph<CityNode, WeightedArc> graph =
+                new CityWeightedAdjacencyMatrixDirectedGraph<CityNode, WeightedArc>(allNodes, new double[allNodes.length][allNodes.length]);
+
+        PathNode<CityNode> forth;
+        PathNode<CityNode> back;
+
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(GREAT_NOVGOROD), 193.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(GREAT_NOVGOROD), graph.indexOf(SAINT_PETERSBURG), 193.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNotNull(back);
+
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(MOSCOW), 710.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(MOSCOW), graph.indexOf(SAINT_PETERSBURG), 710.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNotNull(back);
+
+        graph.disconnectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(MOSCOW));
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNull(forth);
+        Assertions.assertNotNull(back);
+    }
+
+    @Test
+    public void bfsWeightedIncidentalityListDirectedGraphTest() throws GraphInstantiationException {
+
+        CityWeightedIncidentalityListDirectedGraph<CityNode, WeightedArc> graph =
+                new CityWeightedIncidentalityListDirectedGraph<CityNode, WeightedArc>(new ArrayList<>(List.of(allNodes)));
+
+        PathNode<CityNode> forth;
+        PathNode<CityNode> back;
+
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(GREAT_NOVGOROD), 193.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(GREAT_NOVGOROD), graph.indexOf(SAINT_PETERSBURG), 193.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(GREAT_NOVGOROD), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[4], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNotNull(back);
+
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(MOSCOW), 710.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNull(back);
+
+        graph.connectNodes(graph.indexOf(MOSCOW), graph.indexOf(SAINT_PETERSBURG), 710.0d);
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
+        Assertions.assertNotNull(forth);
+        Assertions.assertNotNull(back);
+
+        graph.disconnectNodes(graph.indexOf(SAINT_PETERSBURG), graph.indexOf(MOSCOW));
+        forth = PathNodeUtil.bfs(allNodes[0], c -> graph.indexOf(c) == graph.indexOf(MOSCOW), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(allNodes[6], c -> graph.indexOf(c) == graph.indexOf(SAINT_PETERSBURG), graph::successorsOf, stepsCounter);
         Assertions.assertNull(forth);
         Assertions.assertNotNull(back);
     }
@@ -290,6 +435,66 @@ public class BFSTests {
 
         CrossroadsWeightedAdjacencyMatrixGraph<CrossroadsNode, WeightedRib> graph =
                 new CrossroadsWeightedAdjacencyMatrixGraph<>(Arrays.stream(arr).map(CrossroadsNode::new).toArray(CrossroadsNode[]::new), new double[arr.length][arr.length]);
+
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_18_19_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_18_19_LINES), 510.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_18_19_LINES), graph.indexOf(Crossroad.MALIY_PROSPECT_16_17_LINES), 170.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_16_17_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_16_17_LINES), 530.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_16_17_LINES), graph.indexOf(Crossroad.MALIY_PROSPECT_DONSKAYA), 129.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_14_15_LINES), graph.indexOf(Crossroad.MALIY_PROSPECT_DONSKAYA), 92.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_14_15_LINES), graph.indexOf(Crossroad.MALIY_PROSPECT_12_13_LINES), 203.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_10_11_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_10_11_LINES), 500.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_10_11_LINES), graph.indexOf(Crossroad.MALIY_PROSPECT_8_9_LINES), 168.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_8_9_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_8_9_LINES), 500.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_12_13_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_12_13_LINES), 510.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_10_11_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_8_9_LINES), 173.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_10_11_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_12_13_LINES), 178.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_14_15_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_12_13_LINES), 181.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_14_15_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_16_17_LINES), 178.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_18_19_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_16_17_LINES), 174.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_18_19_LINES), graph.indexOf(Crossroad.BOLSHOY_PROSPECT_18_19_LINES), 520.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.BOLSHOY_PROSPECT_8_9_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_8_9_LINES), 520.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.BOLSHOY_PROSPECT_16_17_LINES), graph.indexOf(Crossroad.BOLSHOY_PROSPECT_18_19_LINES), 194.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.BOLSHOY_PROSPECT_16_17_LINES), graph.indexOf(Crossroad.BOLSHOY_PROSPECT_14_15_LINES), 196.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.BOLSHOY_PROSPECT_12_13_LINES), graph.indexOf(Crossroad.BOLSHOY_PROSPECT_14_15_LINES), 179.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.BOLSHOY_PROSPECT_12_13_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_12_13_LINES), 520.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.DONSKAYA_NEMANSKY), graph.indexOf(Crossroad.MALIY_PROSPECT_DONSKAYA), 420.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.DONSKAYA_NEMANSKY), graph.indexOf(Crossroad.NEMANSKY_PER_16_17_LINES), 227.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.DONSKAYA_NEMANSKY), graph.indexOf(Crossroad.NEMANSKY_PER_14_15_LINES), 202.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_16_17_LINES), graph.indexOf(Crossroad.KAMSKAYA_16_17_LINES), 500.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.KAMSKAYA_14_15_LINES), graph.indexOf(Crossroad.KAMSKAYA_16_17_LINES), 214.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_16_17_LINES), graph.indexOf(Crossroad.KAMSKAYA_16_17_LINES), 500.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.KAMSKAYA_SMOLENKA_EMB_12_13_LINES), graph.indexOf(Crossroad.KAMSKAYA_14_15_LINES), 225.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.KAMSKAYA_14_15_LINES), graph.indexOf(Crossroad.KAMSKAYA_16_17_LINES), 209.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.KAMSKAYA_SMOLENKA_EMB_12_13_LINES), graph.indexOf(Crossroad.SMOLENKA_EMB_10_11_LINES), 180.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SMOLENKA_EMB_8_9_LINES), graph.indexOf(Crossroad.SMOLENKA_EMB_10_11_LINES), 185.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_10_11_LINES), graph.indexOf(Crossroad.SMOLENKA_EMB_10_11_LINES), 297.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_10_11_LINES), graph.indexOf(Crossroad.MALIY_PROSPECT_12_13_LINES), 182.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_16_17_LINES), graph.indexOf(Crossroad.NEMANSKY_PER_16_17_LINES), 81.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.SREDNIY_PROSPECT_14_15_LINES), graph.indexOf(Crossroad.NEMANSKY_PER_14_15_LINES), 78.0d);
+        graph.connectNodes(graph.indexOf(Crossroad.BOLSHOY_PROSPECT_10_11_LINES), graph.indexOf(Crossroad.BOLSHOY_PROSPECT_8_9_LINES), 181.0d);
+
+        Assertions.assertEquals(Crossroad.values().length, graph.getNodeCount());
+
+        PathNode<CrossroadsNode> forth;
+        PathNode<CrossroadsNode> back;
+
+        forth = PathNodeUtil.bfs(graph.nodeAt(graph.indexOf(Crossroad.BOLSHOY_PROSPECT_18_19_LINES)), c -> graph.indexOf(c) == graph.indexOf(Crossroad.SMOLENKA_EMB_8_9_LINES), graph::successorsOf, stepsCounter);
+        back = PathNodeUtil.bfs(graph.nodeAt(graph.indexOf(Crossroad.SMOLENKA_EMB_8_9_LINES)), c -> graph.indexOf(c) == graph.indexOf(Crossroad.BOLSHOY_PROSPECT_18_19_LINES), graph::successorsOf, stepsCounter);
+
+        Assertions.assertNotNull(forth);
+        Assertions.assertNotNull(back);
+
+        System.out.println("FORTH: " + PathNodeUtil.nodeToPath(forth));
+        System.out.println("BACK: " + PathNodeUtil.nodeToPath(back));
+        System.out.println("The BFS algorithm took " + stepsCounter.get() + " steps to complete on " + graph.getNodeCount() + " nodes.");
+    }
+
+    @Test
+    public void bfsCrossroadsWeightedIncidentalityListGraphTest() throws GraphInstantiationException {
+        Crossroad[] arr = Crossroad.values();
+
+        CrossroadsWeightedIncidentalityListGraph<CrossroadsNode, WeightedRib> graph =
+                new CrossroadsWeightedIncidentalityListGraph<>(Arrays.stream(arr).map(CrossroadsNode::new).collect(Collectors.toCollection(ArrayList::new)));
 
         graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_18_19_LINES), graph.indexOf(Crossroad.SREDNIY_PROSPECT_18_19_LINES), 510.0d);
         graph.connectNodes(graph.indexOf(Crossroad.MALIY_PROSPECT_18_19_LINES), graph.indexOf(Crossroad.MALIY_PROSPECT_16_17_LINES), 170.0d);

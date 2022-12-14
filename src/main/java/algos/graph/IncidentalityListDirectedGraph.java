@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Generic implementation of an oriented graph which is based on an incidentality list.
+ * Generic implementation of an oriented (directed) graph which is based on an incidentality list.
  * Incidentality list is an array of vertices (nodes) whose indices match
  * sets of their arcs, contained in an arcs sets array.
  * Each of the ribs must have strictly two index references of two connected nodes.
@@ -43,9 +43,12 @@ public class IncidentalityListDirectedGraph<V, E extends Arc> implements Directe
         return getNodeCount() - 1;
     }
 
-    //TODO make an annotation
-    private void updateRibs() {
+    private void updateArcs() {
         this.ribs = this.incidentality.stream().flatMap(Set::stream).collect(Collectors.toSet());
+    }
+
+    private void updateRibs() {
+        updateArcs();
     }
 
     @Override
@@ -70,6 +73,7 @@ public class IncidentalityListDirectedGraph<V, E extends Arc> implements Directe
     @Override
     public void connectNodes(int from, int to) {
         this.incidentality.get(from).add((E) new Arc(from, to));
+        updateArcs();
     }
 
     @Override
@@ -79,7 +83,8 @@ public class IncidentalityListDirectedGraph<V, E extends Arc> implements Directe
 
     @Override
     public void disconnectNodes(int from, int to) {
-
+        this.incidentality.get(from).remove((E) new Arc(from, to));
+        updateArcs();
     }
 
     public Set<V> successorsOf(int index) {
@@ -101,11 +106,11 @@ public class IncidentalityListDirectedGraph<V, E extends Arc> implements Directe
     }
 
     public ArrayList<V> getNodes() {
-        return nodes;
+        return this.nodes;
     }
 
     public ArrayList<Set<E>> getIncidentality() {
-        return incidentality;
+        return this.incidentality;
     }
 
     @Override

@@ -88,7 +88,7 @@ public class GraphUtil {
         }
     }
 
-    public static final class DijkstraResult<E extends Rib> {
+    public static final class DijkstraResult<E extends WeightedRib> {
         public final double[] distances;
         public final Map<Integer, E> pathMap;
 
@@ -107,7 +107,7 @@ public class GraphUtil {
      * @param <G>  - generic graph implementation type
      * @return an encapsulated result of the calculation
      */
-    public static <N, T extends WeightedRib, G extends WeightedAdjacencyMatrixGraph<N, T>> DijkstraResult<T> dijkstra(N root, G graph) {
+    public static <N, T extends WeightedRib, G extends WeightedGraph<N, T>> DijkstraResult<T> dijkstra(N root, G graph) {
         int start = graph.indexOf(root);
         double[] distances = new double[graph.getNodeCount()];
         distances[start] = .0d;
@@ -140,14 +140,17 @@ public class GraphUtil {
         return distanceMap;
     }
 
-    public static List<WeightedArc> pathMapToPathList(int start, int end, Map<Integer, WeightedArc> pathMap) {
+    public static <E extends Rib> List<E> pathMapToPathList(int start, int end, Map<Integer, E> pathMap) {
         if (pathMap.size() == 0) return List.of();
-        LinkedList<WeightedArc> path = new LinkedList<>();
-        WeightedArc wArc = pathMap.get(end);
-        path.add(wArc);
-        while (wArc.from != start) {
-            wArc = pathMap.get(wArc.from);
-            path.add(wArc);
+        LinkedList<E> path = new LinkedList<>();
+        E wRib = pathMap.get(end);
+        if (Objects.isNull(wRib)) {
+            System.out.println("df");
+        }
+        path.add(wRib);
+        while (wRib.from != start) {
+            wRib = pathMap.get(wRib.from);
+            path.add(wRib);
         }
         Collections.reverse(path);
         return path;

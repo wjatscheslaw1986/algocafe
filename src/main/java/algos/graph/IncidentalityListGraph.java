@@ -77,8 +77,8 @@ public class IncidentalityListGraph<V, E extends Rib> implements Graph<V, E> {
 
     @Override
     public void disconnectNodes(int from, int to) {
-        this.incidentality.get(from).remove(nodeAt(to));
-        this.incidentality.get(to).remove(nodeAt(from));
+        this.incidentality.get(from).remove(ribsOf(from).stream().filter(rib -> rib.to == to).findAny().get());
+        this.incidentality.get(to).remove(ribsOf(to).stream().filter(rib -> rib.from == to).findAny().get());
         updateRibs();
     }
 
