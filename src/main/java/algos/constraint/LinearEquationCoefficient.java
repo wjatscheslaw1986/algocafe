@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2022. This code's author is Viacheslav Mikhailov (mikhailowvw@gmail.com)
+ */
 package algos.constraint;
 
 import java.util.Objects;

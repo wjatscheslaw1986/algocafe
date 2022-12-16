@@ -3,7 +3,7 @@
  */
 package algos.graph;
 
-import algos.Vincenty;
+import algos.geo.Vincenty;
 import algos.graph.exception.GraphInstantiationException;
 import algos.graph.objects.Crossroad;
 import algos.graph.objects.CrossroadsNode;

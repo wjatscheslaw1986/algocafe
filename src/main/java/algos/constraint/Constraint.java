@@ -1,5 +1,5 @@
-// Constraint.java
-// From Classic Computer Science Problems in Java Chapter 3
+// Modified by Viacheslav Mikhailov
+// From Classic Computer Science Problems in Java
 // Copyright 2020 David Kopec
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
 package algos.constraint;
 
 import java.util.List;

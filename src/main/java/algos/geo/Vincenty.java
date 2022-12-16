@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2011 Jan Antala, https://github.com/janantala
  */
-package algos;
+package algos.geo;
 
 /*
 ###===================================================================================================

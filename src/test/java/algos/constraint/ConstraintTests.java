@@ -107,11 +107,11 @@ public class ConstraintTests {
     public void makeUpLinearEquationTest() {
         ThreadLocalRandom rndm = ThreadLocalRandom.current();
         List<LinearEquationCoefficient> coefficients = new LinkedList<>();
-        for (int j = 0; j < 6; j++) coefficients.add(new LinearEquationCoefficient("X" + String.valueOf(j), rndm.nextLong(1L, 7L)));
+        for (int j = 0; j < 6; j++) coefficients.add(new LinearEquationCoefficient("X" + String.valueOf(j), rndm.nextLong(1L, 50L)));
         Map<LinearEquationCoefficient, List<Long>> domainsOfCoefficients = new HashMap<>();
         for (LinearEquationCoefficient cf : coefficients) {
             domainsOfCoefficients.put(cf, new LinkedList<Long>());
-            for (long d = -17L; d <= 5L; d += 1L) domainsOfCoefficients.get(cf).add(d);
+            for (long d = -100L; d <= 100L; d += 1L) domainsOfCoefficients.get(cf).add(d);
         }
         CSP<LinearEquationCoefficient, Long> csp = new CSP<>(coefficients, domainsOfCoefficients);
         csp.addConstraint(new LinearEquationSystemConstraint(coefficients));

@@ -3,6 +3,7 @@
  */
 package algos;
 
+import algos.geo.Vincenty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,10 @@ public class MiscTest {
     }
 
     @Test
-    public void testVincenty() {
-        Assertions.assertEquals(162, Vincenty.getDistance(59.942385d, 30.276066d, 59.941651d, 30.273564d), .1d);
+    public void charTest() {
+        char letter = 65;
+        System.out.println(Character.valueOf(letter).toString());
     }
+
+
 }

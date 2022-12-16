@@ -1,3 +1,4 @@
+// MODIFIED BY VIACHESLAV MIKHAILOV
 // WordSearchConstraint.java
 // From Classic Computer Science Problems in Java Chapter 3
 // Copyright 2020 David Kopec

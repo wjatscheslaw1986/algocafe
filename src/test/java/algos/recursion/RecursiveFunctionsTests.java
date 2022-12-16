@@ -4,13 +4,22 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.stream.LongStream;
 
+import algos.sort.ChoiceSort;
+import algos.sort.QuickSort;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class RecursiveFunctionsTests {
 
 	@Test
-	public void fibbonacciMyOwn() {		
+	public void fibbonacchiTest() {
+		System.out.println("Factorial");
+		int input = 9;
+		System.out.println("Factorial of " + input + " is " + RecursiveFunctions.factorial(input));
+	}
+
+	@Test
+	public void fibbonacciCamparativeTest() {
 		LocalDateTime start = LocalDateTime.now();
 
 		Assertions.assertEquals(483944808890094715L, new RecursiveFunctions.Fibbonacci().iterativeFibbonacci(4000));
