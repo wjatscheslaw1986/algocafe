@@ -37,6 +37,10 @@ public class DynamicTests {
         Assertions.assertEquals(1, backpack.getStates()[2][2].getItemsInBackpack().size());
         Assertions.assertEquals(2, backpack.getStates()[2][3].getItemsInBackpack().size());
 
+        // Dynamic programming is based on a step-by-step calculation of the final result, being based on a previous step result.
+        // Dynamic programming's power is in absence of need of recalculation after an initial set of rules for the task has been changed.
+        // Instead, after having modified the initial condition (i.e. adding new option into a list of all possible options, etc.),
+        // you simply continue calculation from where it had been left.
         backpack.addElement("iPhone");
         backpack.getItemsCosts().put(backpack.getItems()[3], 2000.0d);
         backpack.getItemsSizes().put(backpack.getItems()[3], 1);
@@ -66,6 +70,24 @@ public class DynamicTests {
         Assertions.assertFalse(backpack.getStates()[3][3].getItemsInBackpack().contains("Guitar"));
         Assertions.assertFalse(backpack.getStates()[3][3].getItemsInBackpack().contains("Player"));
 
-        System.out.println(backpack.toString());
+        //System.out.println(backpack.toString());
+
+        items = new String[]{"Water","Book","Food","Coat","Camera"};
+        itemsCosts.clear();
+        itemsSizes.clear();
+        itemsCosts.put(items[0], 10.0d);
+        itemsCosts.put(items[1], 3.0d);
+        itemsCosts.put(items[2], 9.0d);
+        itemsCosts.put(items[3], 5.0d);
+        itemsCosts.put(items[4], 6.0d);
+        itemsSizes.put(items[0], 3);
+        itemsSizes.put(items[1], 1);
+        itemsSizes.put(items[2], 2);
+        itemsSizes.put(items[3], 2);
+        itemsSizes.put(items[4], 1);
+        backpack = new Backpack(6, itemsCosts, itemsSizes);
+        backpack.recalculate();
+        Assertions.assertEquals(25.0d, backpack.getStates()[4][5].getTotalCost());
+        Assertions.assertEquals(3, backpack.getStates()[4][5].getItemsInBackpack().size());
     }
 }

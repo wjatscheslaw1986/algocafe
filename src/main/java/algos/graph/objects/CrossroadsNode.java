@@ -3,10 +3,15 @@
  */
 package algos.graph.objects;
 
-public class CrossroadsNode {
+import algos.kmeans.ClusterDataPoint;
+
+import java.util.List;
+
+public class CrossroadsNode extends ClusterDataPoint {
     private Crossroad crossroad;
 
     public CrossroadsNode(Crossroad c) {
+        super(List.of(c.getLat(), c.getLon()));
         this.crossroad = c;
     }
     public Crossroad getCrossroad() {
