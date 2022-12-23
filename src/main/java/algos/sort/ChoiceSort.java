@@ -4,40 +4,39 @@ import java.util.Arrays;
 
 public class ChoiceSort {
 
-	public static double[] sort(double[] array) {
-		if (array.length == 0)
-			return array;
-		double[] result = new double[array.length];
-		double[] workingArray = new double[array.length];
-		System.arraycopy(array, 0, workingArray, 0, array.length);
-
-		for (int y = 0; y < array.length; y++) {
-			double max = Double.NEGATIVE_INFINITY;
-			int maxIndex = -1;
-			for (int i = 0; i < workingArray.length; i++) {
-
-				if (workingArray[i] > max) {
-					max = workingArray[i];
-					maxIndex = i;
+	public static String[] sortArray(String[] array, boolean reverse) {
+		for (int i = 0; i < array.length - 1; i++) {
+			int extremum = i;
+			for (int j = i+1; j < array.length; j++) {
+				if (reverse) {
+					if (array[extremum].compareTo(array[j]) < 0) {
+						extremum = j;
+					}
+				} else {
+					if (array[extremum].compareTo(array[j]) > 0) {
+						extremum = j;
+					}
 				}
-
 			}
-			
-			result[y] = max;
-			double[] beforeMaxArray = Arrays.copyOf(workingArray, maxIndex);
-			double[] afterMaxArray = new double[array.length - maxIndex - 1];
-			for (int u = maxIndex + 1; u < workingArray.length; u++) {
-				int index = u - maxIndex - 1;
-				afterMaxArray[index] = workingArray[u];
-			}
-
-			double[] nextWorkingArray = Arrays.copyOf(beforeMaxArray, beforeMaxArray.length + afterMaxArray.length);
-			System.arraycopy(afterMaxArray, 0, nextWorkingArray, maxIndex, afterMaxArray.length);
-
-			workingArray = nextWorkingArray;
-
+			String tmp = array[i];
+			array[i] = array[extremum];
+			array[extremum] = tmp;
 		}
+		return array;
+	}
+	private static int min(String[] array) {
+		int min = 0;
+		for (int i = 1; i < array.length; i++) {
+			if (array[i].compareTo(array[min]) > 0) min = i;
+		}
+		return min;
+	}
 
-		return result;
+	private static int max(String[] array) {
+		int max = 0;
+		for (int i = 1; i < array.length; i++) {
+			if (array[i].compareTo(array[max]) < 0) max = i;
+		}
+		return max;
 	}
 }
