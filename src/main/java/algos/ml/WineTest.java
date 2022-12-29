@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package algos.chapter7;
+package algos.ml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public class WineTest {
 
 	public WineTest() {
 		// make sure wine.csv is in the right place in your path
-		List<String[]> wineDataset = Util.loadCSV("src/main/java/algos/chapter7/data/wine.csv");
+		List<String[]> wineDataset = Util.loadCSV("src/main/java/algos/ml/data/wine.csv");
 		// get our lines of data in random order
 		Collections.shuffle(wineDataset);
 		for (String[] wine : wineDataset) {

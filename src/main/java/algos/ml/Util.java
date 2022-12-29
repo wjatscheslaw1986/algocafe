@@ -15,7 +15,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package algos.chapter7;
+package algos.ml;
 
 import java.io.*;
 import java.util.ArrayList;

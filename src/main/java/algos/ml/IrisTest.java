@@ -14,7 +14,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package algos.chapter7;
+package algos.ml;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +26,13 @@ public class IrisTest {
 	public static final String IRIS_VERSICOLOR = "Iris-versicolor";
 	public static final String IRIS_VIRGINICA = "Iris-virginica";
 
-	private List<double[]> irisParameters = new ArrayList<>();
-	private List<double[]> irisClassifications = new ArrayList<>();
-	private List<String> irisSpecies = new ArrayList<>();
+	private List<double[]> irisParameters = new ArrayList<>(); // these are normalized (0.0 <= value <= 1.0) values of input signals (each signal is an array of floating point numbers), accessed by array index in the dataset
+	private List<double[]> irisClassifications = new ArrayList<>(); // these are absolutely (Probability = 1.0) correct answers per input signal accessed by array index in the dataset
+	private List<String> irisSpecies = new ArrayList<>(); // these are correct species for each input signal accessed by array index in the dataset
 
 	public IrisTest() {
 		// make sure iris.csv is in the right place in your path
-		List<String[]> irisDataset = Util.loadCSV("src/main/java/algos/chapter7/data/iris.csv");
+		List<String[]> irisDataset = Util.loadCSV("src/main/java/algos/ml/data/iris.csv");
 		// get our lines of data in random order
 		Collections.shuffle(irisDataset);
 		for (String[] iris : irisDataset) {
@@ -93,5 +93,4 @@ public class IrisTest {
 		System.out.println(results.correct + " correct of " + results.trials + " = " +
 				results.percentage * 100 + "%");
 	}
-
 }

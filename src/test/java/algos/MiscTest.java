@@ -36,5 +36,11 @@ public class MiscTest {
         System.out.println(Character.valueOf(letter).toString());
     }
 
+    @Test
+    public void isInteger() {
+        double n = 3.3;
+        Assertions.assertNotEquals(0, n % 1, 0.0);
+    }
+
 
 }
