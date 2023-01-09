@@ -81,28 +81,25 @@ public class DijkstraTests {
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
         int ITERATIONS = 333333;
-        long[] millis = new long[ITERATIONS];
-        LocalDateTime start;
         double shortestRibWeight = Double.MAX_VALUE;
         for (int i = 0; i < graph.getNodeCount(); i++)
             for (WeightedRib r : graph.ribsOf(i)) {
                 double w = r.getWeight();
                 if (w < shortestRibWeight) shortestRibWeight = w;
             }
-
+        LocalDateTime start = LocalDateTime.now();
         for (int i = 0; i < ITERATIONS; i++) {
             int currentStart = random.nextInt(0, Crossroad.values().length);
             int currentFinish = currentStart;
             while (currentStart == currentFinish) currentFinish = random.nextInt(0, Crossroad.values().length);
-            start = LocalDateTime.now();
             result = GraphUtil.<CrossroadsNode, WeightedRib, CrossroadsWeightedIncidentalityListGraph<CrossroadsNode, WeightedRib>>dijkstra(graph.nodeAt(currentStart), graph);
             Assertions.assertNotNull(result);
             Assertions.assertTrue(GraphUtil.pathMapToPathList(currentStart, currentFinish, result.pathMap)
                     .stream().map(wRib -> graph.nodeAt(wRib.from).getCrossroad().getDescription() + " ==> " + graph.nodeAt(wRib.to).getCrossroad().getDescription()).toList().size() > 0);
-            millis[i] = Duration.between(start, LocalDateTime.now()).toMillis();
         }
+        double avgTime = Duration.between(start, LocalDateTime.now()).toMillis()/ (double) ITERATIONS;
 
-        System.out.println("Incidency list graph. Average dijkstra path build time " + Arrays.stream(millis).average().getAsDouble() + " millis.");
+        System.out.println("Incidency list graph. Average dijkstra path build time " + avgTime + " millis.");
 
     }
 
@@ -159,7 +156,6 @@ public class DijkstraTests {
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
         int ITERATIONS = 333333;
-        long[] millis = new long[ITERATIONS];
         LocalDateTime start;
         double shortestRibWeight = Double.MAX_VALUE;
         for (int i = 0; i < graph.getNodeCount(); i++)
@@ -168,18 +164,18 @@ public class DijkstraTests {
                 if (w < shortestRibWeight) shortestRibWeight = w;
             }
 
+        start = LocalDateTime.now();
         for (int i = 0; i < ITERATIONS; i++) {
             int currentStart = random.nextInt(0, Crossroad.values().length);
             int currentFinish = currentStart;
             while (currentStart == currentFinish) currentFinish = random.nextInt(0, Crossroad.values().length);
-            start = LocalDateTime.now();
             result = GraphUtil.<CrossroadsNode, WeightedRib, CrossroadsWeightedAdjacencyMatrixGraph<CrossroadsNode, WeightedRib>>dijkstra(graph.nodeAt(currentStart), graph);
             Assertions.assertNotNull(result);
             Assertions.assertTrue(GraphUtil.pathMapToPathList(currentStart, currentFinish, result.pathMap)
                     .stream().map(wRib -> graph.nodeAt(wRib.from).getCrossroad().getDescription() + " ==> " + graph.nodeAt(wRib.to).getCrossroad().getDescription()).toList().size() > 0);
-            millis[i] = Duration.between(start, LocalDateTime.now()).toMillis();
         }
+        double avgTime = Duration.between(start, LocalDateTime.now()).toMillis()/ (double) ITERATIONS;
 
-        System.out.println("Adjacency matrix graph. Average dijkstra path build time " + Arrays.stream(millis).average().getAsDouble() + " millis.");
+        System.out.println("Adjacency matrix graph. Average dijkstra path build time " + avgTime + " millis.");
     }
 }

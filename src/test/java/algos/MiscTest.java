@@ -6,6 +6,9 @@ package algos;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class MiscTest {
 
     public static class PiCalc {
@@ -40,7 +43,44 @@ public class MiscTest {
     public void isInteger() {
         double n = 3.3;
         Assertions.assertNotEquals(0, n % 1, 0.0);
+        Assertions.assertEquals(0.3, n % 1, 0.0000001);
     }
 
+    @Test
+    public void indexTest() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int n = 10, N=n*n, inter = 0;
+        int[][] arr = new int[n][n];
+        System.out.println("-----------------");
+        Arrays.stream(arr).forEach((a) -> System.out.println(Arrays.toString(a)));
+        for (int i = 0; i < N; i++) {
+            int row = (int) i/n;
+            int col = i - row*n;
+            arr[row][col] = i+1;
+        }
+        System.out.println("-----------------");
+        Arrays.stream(arr).forEach((a) -> System.out.println(Arrays.toString(a)));
+        Assertions.assertEquals(4, arr[0][3]);
+        Assertions.assertEquals(findElementNumberByIndices(arr, 0, 3), arr[0][3]);
+        setValueByElementNumber(arr, 4, 991);
+        Assertions.assertNotEquals(4, arr[0][3]);
+        Assertions.assertEquals(991, arr[0][3]);
+        Assertions.assertEquals(25, arr[2][4]);
+        setValueByElementNumber(arr, 25, 991);
+        Assertions.assertNotEquals(25, arr[2][4]);
+        Assertions.assertEquals(991, arr[2][4]);
+        System.out.println("-----------------");
+        Arrays.stream(arr).forEach((a) -> System.out.println(Arrays.toString(a)));
+    }
+
+    private void setValueByElementNumber(int[][] arr, int elementN, int value) {
+        int rowIndex = (elementN - 1)/arr.length;
+        int colIndex = elementN - 1 - rowIndex*arr.length;
+        arr[rowIndex][colIndex] = value;
+    }
+
+    private int findElementNumberByIndices(int[][] arr, int rowIndex, int colIndex) {
+        return rowIndex*arr.length + colIndex + 1;
+    }
 
 }

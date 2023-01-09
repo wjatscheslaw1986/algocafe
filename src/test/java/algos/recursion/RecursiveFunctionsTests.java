@@ -43,6 +43,6 @@ public class RecursiveFunctionsTests {
 	public void recursiveFibbonacciTest() {
 		Assertions.assertEquals(8L, new RecursiveFunctions.Fibbonacci().recursiveFibbonacci(6));
 		LongStream fibStream = new RecursiveFunctions.FibbonacciStream().stream();
-		fibStream.limit(6).forEach(System.out::println);
+		fibStream.limit(16).forEach(System.out::println);
 	}
 }
