@@ -26,7 +26,7 @@ public class C4Board implements Board<Integer> {
 	public static final int SEGMENT_LENGTH = 4;
 	public static final ArrayList<C4Location[]> SEGMENTS = generateSegments();
 
-	// generate all of the segments for a given board
+	// generate all the segments for a given board
 	// this static method is only run once
 	private static ArrayList<C4Location[]> generateSegments() {
 		ArrayList<C4Location[]> segments = new ArrayList<>();

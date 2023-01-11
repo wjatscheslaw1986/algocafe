@@ -4,8 +4,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.stream.LongStream;
 
-import algos.sort.ChoiceSort;
-import algos.sort.QuickSort;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -44,5 +42,12 @@ public class RecursiveFunctionsTests {
 		Assertions.assertEquals(8L, new RecursiveFunctions.Fibbonacci().recursiveFibbonacci(6));
 		LongStream fibStream = new RecursiveFunctions.FibbonacciStream().stream();
 		fibStream.limit(16).forEach(System.out::println);
+	}
+
+	@Test
+	public void triangleNumberTest() {
+		for (int i = 1; i < 45; i++) System.out.print(RecursiveFunctions.triangleNumberRecursive(i) + " ");
+		System.out.println();
+		for (int i = 1; i < 45; i++) System.out.print(RecursiveFunctions.triangleNumber(i) + " ");
 	}
 }

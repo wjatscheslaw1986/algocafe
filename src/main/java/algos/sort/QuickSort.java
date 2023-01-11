@@ -54,10 +54,10 @@ public class QuickSort<C extends Comparable<C>> {
 	}
 
 
-	public C[] manualSort3Elements(int from, boolean reverse) {
+	public void manualSort3Elements(int from, boolean reverse) {
 		if (arr.length <= from)
 			throw new IllegalArgumentException("Array index out of bounds: " + from + " from array length " + arr.length);
-		if (arr.length - from == 1) return arr;
+		if (arr.length - from == 1) return;
 		if (arr.length - from == 2) {
 			if (reverse) {
 				if (arr[from].compareTo(arr[from + 1]) > 0) swap(from, from + 1);
@@ -82,7 +82,6 @@ public class QuickSort<C extends Comparable<C>> {
 					swap(from + 1, from + 2);
 			}
 		}
-		return arr;
 	}
 
 	public C medianOf3(int leftInd, int rightInd, boolean reverse) {
@@ -134,6 +133,10 @@ public class QuickSort<C extends Comparable<C>> {
 			} else {
 				if (arr[left].compareTo(arr[right]) > 0) swap(left, right);
 			}
+			return;
+		}
+		if (right-left == 2) {
+			manualSort3Elements(left, reverse);
 			return;
 		}
 		int pivot = partition(left, right, reverse);

@@ -28,15 +28,8 @@ public class RecursiveFunctions {
 
     public static class Fibbonacci {
         private final Map<Long, Long> memo;
-
         public Fibbonacci() {
             this.memo = new HashMap<>(Map.of(0L, 0L, 1L, 1L));
-        }
-
-        public long recursiveFibbonacciWithMemoization(long n) {
-            if (!memo.containsKey(n))
-                memo.put(n, recursiveFibbonacciWithMemoization(n - 1L) + recursiveFibbonacciWithMemoization(n - 2L));
-            return memo.get(n);
         }
 
         public long iterativeFibbonacci(long n) {
@@ -47,6 +40,12 @@ public class RecursiveFunctions {
                 next = current + previous;
             }
             return next;
+        }
+
+        public long recursiveFibbonacciWithMemoization(long n) {
+            if (!memo.containsKey(n))
+                memo.put(n, recursiveFibbonacciWithMemoization(n - 1L) + recursiveFibbonacciWithMemoization(n - 2L));
+            return memo.get(n);
         }
 
         public long recursiveFibbonacci(long n) {
@@ -66,6 +65,20 @@ public class RecursiveFunctions {
                 return previous;
             });
         }
+    }
+
+    public static int triangleNumberRecursive(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        else return n + triangleNumberRecursive(n-1);
+    }
+
+    public static int triangleNumber(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        int result = 0;
+        for (; n > 0; n--) result = result + n;
+        return result;
     }
 
 }

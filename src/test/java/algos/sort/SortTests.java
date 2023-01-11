@@ -3,6 +3,7 @@
  */
 package algos.sort;
 
+import algos.datastructure.QuickSortStack;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -139,13 +140,21 @@ public class SortTests {
         Assertions.assertEquals("Vladimir", names2.getArray()[2]);
         QuickSort<String> names3 = new QuickSort<>(new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Leonide", "Timofey", "Mikhael", "Boris", "Peter", "Xenomorph"});
         names3.manualSort3Elements(0, false);
-        Assertions.assertEquals("Dmitri", names2.getArray()[0]);
-        Assertions.assertEquals("Oleg", names2.getArray()[1]);
-        Assertions.assertEquals("Vladimir", names2.getArray()[2]);
+        Assertions.assertEquals("Dmitri", names3.getArray()[0]);
+        Assertions.assertEquals("Oleg", names3.getArray()[1]);
+        Assertions.assertEquals("Vladimir", names3.getArray()[2]);
         names3.manualSort3Elements(3, false);
         Assertions.assertEquals("Alex", names3.getArray()[3]);
         Assertions.assertEquals("Evgen", names3.getArray()[4]);
         Assertions.assertEquals("Nikolay", names3.getArray()[5]);
+        names3.manualSort3Elements(0, true);
+        Assertions.assertEquals("Vladimir", names3.getArray()[0]);
+        Assertions.assertEquals("Oleg", names3.getArray()[1]);
+        Assertions.assertEquals("Dmitri", names3.getArray()[2]);
+        names3.manualSort3Elements(3, true);
+        Assertions.assertEquals("Nikolay", names3.getArray()[3]);
+        Assertions.assertEquals("Evgen", names3.getArray()[4]);
+        Assertions.assertEquals("Alex", names3.getArray()[5]);
     }
 
     @Test
@@ -214,6 +223,39 @@ public class SortTests {
         System.out.println(Arrays.stream(narr5.getArray()).reduce((s1, s2) -> s1 + " " + s2).get());
         narr5.sort(0, narr5.getArray().length-1, true);
         System.out.println(Arrays.stream(narr5.getArray()).reduce((s1, s2) -> s1 + " " + s2).get());
+
+    }
+
+    @Test
+    public void nonRecursiveQuickSortTest() {
+
+        Double[] numbers = new Double[]{44d, 3d, 6d, 66d, 89d, 86d, 34d, 41d, 10d, 9d, 29d};
+        Assertions.assertFalse(numbers[0] < numbers[1]);
+
+        QuickSortStack<Double> qs = new QuickSortStack<>(numbers, false);
+
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(qs.getSortedArray()[i] < qs.getSortedArray()[i+1]);
+        qs = new QuickSortStack<>(numbers, true);
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(qs.getSortedArray()[i] > qs.getSortedArray()[i+1]);
+
+        String[] names = new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"};
+        Assertions.assertNotEquals("Alex", names[0]);
+        Assertions.assertNotEquals("Igor", names[4]);
+        Assertions.assertNotEquals("Peter", names[10]);
+        Assertions.assertNotEquals("Xenomorph", names[14]);
+        Assertions.assertNotEquals("Alex", names[0]);
+        QuickSortStack<String> qss = new QuickSortStack<>(names, false);
+        Assertions.assertEquals("Alex", names[0]);
+        Assertions.assertEquals("Igor", names[4]);
+        Assertions.assertEquals("Peter", names[10]);
+        Assertions.assertEquals("Xenomorph", names[14]);
+        Assertions.assertEquals("Alex", names[0]);
+        qss = new QuickSortStack<>(names, true);
+        Assertions.assertEquals("Xenomorph", names[0]);
+        Assertions.assertEquals("Vladimir", names[1]);
+        Assertions.assertEquals("Timofey", names[2]);
 
     }
 
