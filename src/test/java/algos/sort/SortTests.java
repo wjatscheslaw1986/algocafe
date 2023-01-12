@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 
 public class SortTests {
+
     @Test
     public void sortBubbleTest() {
 
@@ -109,9 +110,6 @@ public class SortTests {
         QuickSort<Integer> numbers = new QuickSort<>(new Integer[]{324, 432, 23, 5, 2, 3542345, 34, 12, 33, 455, 6, 12, 1, 0, 56, 89, 88, 665, 55, 4, 532, 721, 841, 8743, 7830});
         System.out.println(Arrays.toString(numbers.getArray()));
         int j = numbers.partition( 3, 9, false);
-        //System.out.printf("Number of elements total : %d\n", numbers.length);
-        //System.out.println("Left group : " + Arrays.stream(numbers).limit(j).map(Object::toString).reduce("", (String s1, String s2) -> " ".concat(s1).concat(" ").concat(s2)));
-        //System.out.println("Right group : " + Arrays.stream(numbers).skip(j).map(Object::toString).reduce("", (String s1, String s2) -> " ".concat(s1).concat(" ").concat(s2)));
         Assertions.assertEquals(8, Arrays.stream(numbers.getArray()).limit(j).count());
         Assertions.assertEquals(numbers.getArray().length-j, Arrays.stream(numbers.getArray()).skip(j).count());
 
@@ -121,16 +119,10 @@ public class SortTests {
         System.out.println(Arrays.toString(names.getArray()));
         Assertions.assertEquals(10, Arrays.stream(names.getArray()).limit(i).count());
         Assertions.assertEquals(names.getArray().length-10, Arrays.stream(names.getArray()).skip(i).count());
-        //System.out.printf("Number of elements total : %d\n", names.length);
-        //System.out.println("Left group : " + Arrays.stream(names).limit(i).reduce("", (String s1, String s2) -> " ".concat(s1).concat(" ").concat(s2)) + " in total " + Arrays.stream(names).limit(i).count() + " elements");
-        //System.out.println("Right group : " + Arrays.stream(names).skip(i).reduce("", (String s1, String s2) -> " ".concat(s1).concat(" ").concat(s2)) + " in total " + Arrays.stream(names).skip(i).count() + " elements");
-
     }
 
     @Test
     public void manualSortTest() {
-        //QuickSort<String> names = new QuickSort<>(new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Leonide", "Timofey", "Mikhael", "Boris", "Peter", "Xenomorph"});
-        //Assertions.assertThrows(ArrayIndexOutOfBoundsException.class, () -> QuickSort.manualSort3Elements(names.length));
         QuickSort<String> names2 = new QuickSort<>(new String[]{"Vladimir", "Dmitri", "Oleg"});
         Assertions.assertNotEquals("Dmitri", names2.getArray()[0]);
         Assertions.assertNotEquals("Oleg", names2.getArray()[1]);
@@ -235,10 +227,10 @@ public class SortTests {
         QuickSortStack<Double> qs = new QuickSortStack<>(numbers, false);
 
         for (int i = 0; i < numbers.length-1; i++)
-            Assertions.assertTrue(qs.getSortedArray()[i] < qs.getSortedArray()[i+1]);
+            Assertions.assertTrue(numbers[i] < numbers[i+1]);
         qs = new QuickSortStack<>(numbers, true);
         for (int i = 0; i < numbers.length-1; i++)
-            Assertions.assertTrue(qs.getSortedArray()[i] > qs.getSortedArray()[i+1]);
+            Assertions.assertTrue(numbers[i] > numbers[i+1]);
 
         String[] names = new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"};
         Assertions.assertNotEquals("Alex", names[0]);
@@ -299,5 +291,68 @@ public class SortTests {
         System.out.println("Left group : " + Arrays.stream(names2.getArray()).limit(i2).reduce("", (String s1, String s2) -> " ".concat(s1).concat(" ").concat(s2)) + " in total " + Arrays.stream(names2.getArray()).limit(i2).count() + " elements");
         System.out.println("Right group : " + Arrays.stream(names2.getArray()).skip(i2).reduce("", (String s1, String s2) -> " ".concat(s1).concat(" ").concat(s2)) + " in total " + Arrays.stream(names2.getArray()).skip(i2).count() + " elements");
 
+    }
+
+    @Test
+    public void mergeSortTest() {
+        Double[] numbers = new Double[]{44d, 3d, 6d, 66d, 89d, 86d, 34d, 41d, 10d, 9d, 29d};
+        Assertions.assertFalse(numbers[0] < numbers[1]);
+
+        MergeSort<Double> ms = new MergeSort<>(numbers, false);
+
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] < numbers[i+1]);
+        ms = new MergeSort<>(numbers, true);
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] > numbers[i+1]);
+
+        String[] names = new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"};
+        Assertions.assertNotEquals("Alex", names[0]);
+        Assertions.assertNotEquals("Igor", names[4]);
+        Assertions.assertNotEquals("Peter", names[10]);
+        Assertions.assertNotEquals("Xenomorph", names[14]);
+        Assertions.assertNotEquals("Alex", names[0]);
+        MergeSort<String> qss = new MergeSort<>(names, false);
+        Assertions.assertEquals("Alex", names[0]);
+        Assertions.assertEquals("Igor", names[4]);
+        Assertions.assertEquals("Peter", names[10]);
+        Assertions.assertEquals("Xenomorph", names[14]);
+        Assertions.assertEquals("Alex", names[0]);
+        qss = new MergeSort<>(names, true);
+        Assertions.assertEquals("Xenomorph", names[0]);
+        Assertions.assertEquals("Vladimir", names[1]);
+        Assertions.assertEquals("Timofey", names[2]);
+    }
+
+    @Test
+    public void nonRecursiveMergeSortTest() {
+        Double[] numbers = new Double[]{44d, 3d, 6d, 66d, 89d, 86d, 34d, 41d, 10d, 9d, 29d};
+        //Double[] numbers = new Double[]{44d, 3d,  89d, 66d, 6d};
+        Assertions.assertFalse(numbers[0] < numbers[1]);
+
+        MergeSortCycle<Double> ms = new MergeSortCycle<>(numbers, false);
+
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] < numbers[i+1]);
+        ms = new MergeSortCycle<>(numbers, true);
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] > numbers[i+1]);
+
+        String[] names = new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"};
+        Assertions.assertNotEquals("Alex", names[0]);
+        Assertions.assertNotEquals("Igor", names[4]);
+        Assertions.assertNotEquals("Peter", names[10]);
+        Assertions.assertNotEquals("Xenomorph", names[14]);
+        Assertions.assertNotEquals("Alex", names[0]);
+        MergeSortCycle<String> qss = new MergeSortCycle<>(names, false);
+        Assertions.assertEquals("Alex", names[0]);
+        Assertions.assertEquals("Igor", names[4]);
+        Assertions.assertEquals("Peter", names[10]);
+        Assertions.assertEquals("Xenomorph", names[14]);
+        Assertions.assertEquals("Alex", names[0]);
+        qss = new MergeSortCycle<>(names, true);
+        Assertions.assertEquals("Xenomorph", names[0]);
+        Assertions.assertEquals("Vladimir", names[1]);
+        Assertions.assertEquals("Timofey", names[2]);
     }
 }

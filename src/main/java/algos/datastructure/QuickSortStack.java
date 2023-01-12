@@ -16,11 +16,7 @@ public class QuickSortStack<E extends Comparable<E>> {
         this.reverse = reverse;
         this.stack = new LinkedBlockingDeque<>();
         this.array = arrayToSort;
-        while (!sort()) ;
-    }
-
-    public E[] getSortedArray() {
-        return array;
+        while (!sort());
     }
 
     private boolean sort() {
