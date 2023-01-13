@@ -3,12 +3,12 @@
  */
 package algos.datastructure;
 
-public class TriangleNumberNCalcualtor extends ExecutionStack<TriangleNumberCalculationStepState>{
+public class StackTriangleNumberCalc extends ExecutionStack<TriangleNumberCalculationStepState>{
     private int answer;
     private int executionBranchCode;
     private final int triangleNumberNo;
 
-    public TriangleNumberNCalcualtor(int n) {
+    public StackTriangleNumberCalc(int n) {
         super(n);
         executionBranchCode = 1; // next step execution branch
         triangleNumberNo = n;
@@ -48,4 +48,5 @@ public class TriangleNumberNCalcualtor extends ExecutionStack<TriangleNumberCalc
         }
         return false; // set non-termination value
     }
+
 }

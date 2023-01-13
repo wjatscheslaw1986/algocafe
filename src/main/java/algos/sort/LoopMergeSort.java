@@ -4,13 +4,13 @@
  */
 package algos.sort;
 
-public class MergeSortCycle<E extends Comparable<E>> {
+public class LoopMergeSort<E extends Comparable<E>> {
 
     private E[] array;
     private E[] workspace;
     private final boolean reverse;
 
-    public MergeSortCycle(E[] array, boolean reverse) {
+    public LoopMergeSort(E[] array, boolean reverse) {
         this.array = array;
         this.workspace = (E[]) new Comparable[array.length];
         this.reverse = reverse;

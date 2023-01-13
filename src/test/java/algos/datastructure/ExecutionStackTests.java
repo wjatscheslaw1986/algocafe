@@ -10,7 +10,7 @@ public class ExecutionStackTests {
 
     @Test
     public void triangleNumberTest() {
-        TriangleNumberNCalcualtor triangleNumberNCalcualtor = new TriangleNumberNCalcualtor(2);
-        Assertions.assertEquals(3, triangleNumberNCalcualtor.getAnswer());
+        StackTriangleNumberCalc stackTriangleNumberCalc = new StackTriangleNumberCalc(2);
+        Assertions.assertEquals(3, stackTriangleNumberCalc.getAnswer());
     }
 }
