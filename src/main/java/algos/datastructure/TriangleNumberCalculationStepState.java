@@ -4,7 +4,7 @@
 package algos.datastructure;
 
 /**
- * This record is an OOP's 'State', effectively
+ * This record is a state of a calculation step
  *
  * @param currentStepValue the triangle calculated number value at current step
  * @param nextExecutionBranchCode a 'what to do next' code (program manual branching instead of naive recursion)
