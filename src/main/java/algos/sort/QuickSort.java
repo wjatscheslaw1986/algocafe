@@ -3,12 +3,20 @@
  */
 package algos.sort;
 
-public class QuickSort<C extends Comparable<C>> {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-	C[] arr;
+public final class QuickSort<C extends Comparable<C>> {
+
+	private final C[] arr;
 
 	public QuickSort(C[] array) {
-		this.arr = array;
+		C[] arry = (C[]) new Object[array.length];
+		System.arraycopy(array, 0, arry, 0,  array.length);
+		ArrayList<C> tmp = new ArrayList<>(List.of(arry));
+		Collections.shuffle(tmp); // shuffling the array before we sort it is necessary in QuickSort, in order to avoid a quadratic time case.
+		this.arr = (C[]) tmp.toArray(Comparable[]::new);
 	}
 
 	public C[] getArray() {

@@ -401,4 +401,34 @@ public class SortTests {
         Assertions.assertEquals("Vladimir", names[1]);
         Assertions.assertEquals("Timofey", names[2]);
     }
+
+    @Test
+    public void heapSortTest() {
+        Double[] numbers = new Double[]{13d, 44d, 3d, 6d, 66d, 89d, 86d, 34d, 41d, 10d, 9d, 29d};
+        //Assertions.assertFalse(numbers[0] < numbers[1]);
+
+        HeapSort.sort(numbers, false);
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] <= numbers[i+1]);
+        HeapSort.sort(numbers, true);
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] >= numbers[i+1]);
+
+        String[] names = new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"};
+        Assertions.assertNotEquals("Alex", names[0]);
+        Assertions.assertNotEquals("Igor", names[4]);
+        Assertions.assertNotEquals("Peter", names[10]);
+        Assertions.assertNotEquals("Xenomorph", names[14]);
+        Assertions.assertNotEquals("Alex", names[0]);
+        HeapSort.sort(names, false);
+        Assertions.assertEquals("Alex", names[0]);
+        Assertions.assertEquals("Igor", names[4]);
+        Assertions.assertEquals("Peter", names[10]);
+        Assertions.assertEquals("Xenomorph", names[14]);
+        Assertions.assertEquals("Alex", names[0]);
+        HeapSort.sort(names, true);
+        Assertions.assertEquals("Xenomorph", names[0]);
+        Assertions.assertEquals("Vladimir", names[1]);
+        Assertions.assertEquals("Timofey", names[2]);
+    }
 }

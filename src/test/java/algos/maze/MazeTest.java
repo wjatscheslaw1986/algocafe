@@ -16,11 +16,17 @@ public class MazeTest {
 
     @BeforeAll
     static void initAll() {
-        m = new Maze(117, 122, new MazeTravelState(0, 5, null), new MazeTravelState(116, 77, null), .2f);
+//        m = new Maze(117, 122, new MazeTravelState(0, 5, null), new MazeTravelState(116, 77, null), .2f);
+//        Assertions.assertEquals(5, m.getStart().column);
+//        Assertions.assertEquals(0, m.getStart().row);
+//        Assertions.assertEquals(77, m.getGoal().column);
+//        Assertions.assertEquals(116, m.getGoal().row);
+
+        m = new Maze(9, 9, new MazeTravelState(0, 5, null), new MazeTravelState(8, 3, null), .2f);
         Assertions.assertEquals(5, m.getStart().column);
         Assertions.assertEquals(0, m.getStart().row);
-        Assertions.assertEquals(77, m.getGoal().column);
-        Assertions.assertEquals(116, m.getGoal().row);
+        Assertions.assertEquals(3, m.getGoal().column);
+        Assertions.assertEquals(8, m.getGoal().row);
     }
 
     @Test

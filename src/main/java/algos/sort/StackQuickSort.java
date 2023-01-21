@@ -64,7 +64,7 @@ public class StackQuickSort<E extends Comparable<E>> {
     }
 
     /**
-     * This record is a state
+     * This record is a state of a calculation step
      *
      * @param left left cursor (index, inclusive) for sorting algorithm
      * @param right right cursor (index, inclusive) for sorting algorithm
