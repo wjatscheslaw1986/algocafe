@@ -4,7 +4,9 @@
  */
 package algos.sort;
 
-import edu.princeton.cs.algs4.StdRandom;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class QuickSelect {
 
@@ -13,23 +15,23 @@ public class QuickSelect {
      *
      * @param array a source for search
      * @param k amount of elements to select
-     * @param top true if top k elements, false if k bottom
-     * @return a possible median element of the array
+     * @param top true if top k elements, false if bottom k elements
      * @param <C> a Comparable type
      */
-    public static <C extends Comparable<C>> C rearrangeToSelectK(C[] array, int k, boolean top) {
-        StdRandom.shuffle(array);
+    public static <C extends Comparable<C>> void rearrangeToSelectK(C[] array, int k, boolean top) {
+        List<C> list = Arrays.asList(array);
+        Collections.shuffle(list);
+
+        for(int i = 0; i < array.length; i++) array[i] = list.get(i);
+
         int lo = 0;
         int hi = array.length - 1;
 
         while (lo < hi) {
-
             int j = QuickSort.<C>partition(array, lo, hi, !top);
             if (j < k) lo = j + 1;
-            if (j > k) hi = j - 1;
-            else return array[j];
+            else if (j > k) hi = j - 1;
+            else return;
         }
-
-        return array[k];
      }
 }
