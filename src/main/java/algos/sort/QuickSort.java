@@ -35,7 +35,7 @@ public final class QuickSort<C extends Comparable<C>> {
 		if (left < 0 || right >= arr.length) throw new IllegalArgumentException("the 'left' and 'right' arguments must be indices of an array");
 		int leftCursor, rightCursor;
 		if (reverse) {
-			leftCursor = left; // for purposes of QuickSort, we exclude the very right element from partitioning and consider it to be a pivot of partitioning
+			leftCursor = left; // for purposes of QuickSort, we exclude the very left element from partitioning and consider it to be a pivot of partitioning
 			rightCursor = right + 1;
 		} else {
 			leftCursor = left - 1;
@@ -53,11 +53,11 @@ public final class QuickSort<C extends Comparable<C>> {
 			else swap(arr, leftCursor, rightCursor);
 		}
 		if (reverse) {
-			swap(arr, rightCursor, left); // by the end of partitioning, 'leftCursor' is the index of the most left element of the right (larger) segment. We swap it with the pivot. Now, the pivot is the only sorted element by now (in the range between 'left' and 'right' indices, inclusive), and holds its final position (i.e. array index) till the end of QuickSort
+			swap(arr, rightCursor, left); // by the end of partitioning, 'rightCursor' will be the index of the most right element of the left (larger values) segment. We swap it with the pivot. Now, the former pivot is the only sorted element by now (in the range between 'left' and 'right' indices, inclusive), and now holds its final position (i.e. array till the end of QuickSort
 			return rightCursor;
 		}
 		else {
-			swap(arr, leftCursor, right); // by the end of partitioning, 'leftCursor' is the index of the most left element of the right (larger) segment. We swap it with the pivot. Now, the pivot is the only sorted element by now (in the range between 'left' and 'right' indices, inclusive), and holds its final position (i.e. array index) till the end of QuickSort
+			swap(arr, leftCursor, right); // by the end of partitioning, 'leftCursor' will be the index of the most left element of the right (larger values) segment. We swap it with the pivot. Now, the former pivot is the only sorted element by now (in the range between 'left' and 'right' indices, inclusive), and now holds its final position (i.e. array index) till the end of QuickSort
 			return leftCursor;
 		}
 	}

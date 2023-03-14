@@ -55,20 +55,20 @@ public class DNATests {
     @Test
     public void performanceTest() {
         LocalDateTime startLinear = LocalDateTime.now();
-        for (int i = 0; i < 1_000_000; i++) {
+        for (int i = 0; i < 1_000; i++) {
             Gene g = new Gene("AGACCATATTAAGACCATATTAAGACCATATTAAGACCATATTAGATGATGATAGCACCATCACACTGAGACAGCAATGATAGATACACAACACGCCATAGATAGTAGATCGCTCGCTGAGCGGATGATGCGGTAGATAGGATGGAAGCACACGATAGAGATAGTAACCAGACGCCGCATAGTAGT");
             GeneUtil.linearContains(g.getGene(), new Gene.Codon("GTT"));
             GeneUtil.linearContains(g.getGene(), new Gene.Codon("CGG"));
         }
-        System.out.println("One million times linear contains checked for " + Duration.between(startLinear, LocalDateTime.now()).toMillis() + " millis");
+        System.out.println("One thousand times linear contains checked for " + Duration.between(startLinear, LocalDateTime.now()).toMillis() + " millis");
 
         LocalDateTime startBinary = LocalDateTime.now();
-        for (int i = 0; i < 1_000_000; i++) {
+        for (int i = 0; i < 1_000; i++) {
             Gene g = new Gene("AGACCATATTAAGACCATATTAAGACCATATTAAGACCATATTAGATGATGATAGCACCATCACATGCAGACAGCAATGATAGATACACAACACGCATAGACTAGTAGATCGCTCGCTGAGCGGATGATGCGGTAGATAGGATGGAAGCACACGATAGAGATAGTAACCAGACGCCGCATAGTAGT");
             GeneUtil.binaryContains(g.getSortedCodons(), new Gene.Codon("GTT"));
             GeneUtil.binaryContains(g.getSortedCodons(), new Gene.Codon("CGG"));
         }
-        System.out.println("One million times binary contains checked for " + Duration.between(startBinary, LocalDateTime.now()).toMillis() + " millis");
+        System.out.println("One thousand times binary contains checked for " + Duration.between(startBinary, LocalDateTime.now()).toMillis() + " millis");
     }
     
     @Test
@@ -76,15 +76,16 @@ public class DNATests {
         List<Boolean> rslts = new LinkedList<>();
         Gene g = GeneUtil.generateRandomGene();
         LocalDateTime startLinear = LocalDateTime.now();
-        int times = 1_000;
+        int times = 10_000;
         for (int i = 0; i < times; i++) rslts.add(GeneUtil.linearContains(g.getGene(), GeneUtil.generateRandomCodon()));
 
-        System.out.println("" + times + " times linear contains checked for " + Duration.between(startLinear, LocalDateTime.now()).toMillis() + " millis");
+        System.out.println(times + " times linear contains checked for " + Duration.between(startLinear, LocalDateTime.now()).toMillis() + " millis");
 
         LocalDateTime startBinary = LocalDateTime.now();
         for (int i = 0; i < times; i++) rslts.add(GeneUtil.binaryContains(g.getSortedCodons(), GeneUtil.generateRandomCodon()));
 
-        System.out.println("" + times + " times binary contains checked for " + Duration.between(startBinary, LocalDateTime.now()).toMillis() + " millis");
-        System.out.println("Num " + rslts.parallelStream().count());
+        System.out.println(times + " times binary contains checked for " + Duration.between(startBinary, LocalDateTime.now()).toMillis() + " millis");
+
+        System.out.println("Total number of checks:  " + rslts.parallelStream().count());
     }
 }

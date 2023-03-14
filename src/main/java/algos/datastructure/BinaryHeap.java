@@ -1,5 +1,5 @@
 /*
- * Copyright © 2023. This code's author is Viacheslav Mikhailov (mikhailowvw@gmail.com)
+ * Copyright © 2023. Viacheslav Mikhailov https://github.com/vjatscheslaw
  */
 package algos.datastructure;
 
@@ -84,7 +84,7 @@ public final class BinaryHeap<T extends Comparable<T>> {
         return max;
     }
 
-    public void swap (int i, int j) {
+    private void swap (int i, int j) {
         T temp = priorityQueue[i];
         priorityQueue[j] = priorityQueue[i];
         priorityQueue[i] = temp;

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2023. This code's author is Viacheslav Mikhailov (mikhailowvw@gmail.com)
+ * Copyright © 2023. Viacheslav Mikhailov https://github.com/vjatscheslaw
  */
 package algos.datastructure;
 

@@ -34,7 +34,7 @@ public class Gene {
 		sortedCodons = new ArrayList(gene);
 		LocalDateTime strt = LocalDateTime.now();
 		Collections.sort(sortedCodons);
-		System.out.println("Sort done in " + Duration.between(strt, LocalDateTime.now()).toMillis() + " millis");
+//		System.out.println("Sort done in " + Duration.between(strt, LocalDateTime.now()).toMillis() + " millis");
 	}
 	
 	public enum Nucleotide {

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2023. This code's author is Viacheslav Mikhailov (mikhailowvw@gmail.com)
+ * Copyright © 2023. Viacheslav Mikhailov https://github.com/vjatscheslaw
  */
 package algos.datastructure;
 
@@ -10,7 +10,7 @@ package algos.datastructure;
  *
  * @param <P> each recursive method call carries its state, which is recursive method argument values. The generic type P is the recursive call state type.
  */
-public class ExecutionStack<P> {
+public abstract class ExecutionStack<P> {
     private int maxSize;
     private P[] stack;
     private int top;

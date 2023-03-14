@@ -37,5 +37,4 @@ public class EncryptionUtil {
         new Random().nextBytes(result);
         return result;
     }
-
 }
