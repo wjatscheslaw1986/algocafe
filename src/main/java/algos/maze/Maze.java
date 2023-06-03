@@ -15,17 +15,13 @@
 // limitations under the License.
 package algos.maze;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Maze {
 
-    @Getter
     private final int rows, columns;
-    @Getter
     private final MazeTravelState start, goal;
     private Cell[][] grid;
     private final float sparseness;
@@ -49,6 +45,25 @@ public class Maze {
                 grid[i][y] = Cell.EMPTY;
         randomlyFill();
     }
+    
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+
+    public MazeTravelState getStart() {
+        return start;
+    }
+
+    public MazeTravelState getGoal() {
+        return goal;
+    }
+
+
 
     public enum Cell {
 

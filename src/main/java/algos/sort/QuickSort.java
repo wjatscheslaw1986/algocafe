@@ -12,10 +12,10 @@ public final class QuickSort<C extends Comparable<C>> {
 	private final C[] arr;
 
 	public QuickSort(C[] array) {
-		C[] arry = (C[]) new Object[array.length];
+		C[] arry = (C[]) new Comparable[array.length];
 		System.arraycopy(array, 0, arry, 0,  array.length);
 		ArrayList<C> tmp = new ArrayList<>(List.of(arry));
-		Collections.shuffle(tmp); // shuffling the array before we sort it is necessary in QuickSort, in order to avoid a quadratic time case.
+		Collections.shuffle(tmp); // shuffling the array before we sort. It is necessary in QuickSort, in order to avoid quadratic time degradation. Degradaton to quadratic time occurs when the array is already sorted in the opposite direction.
 		this.arr = (C[]) tmp.toArray(Comparable[]::new);
 	}
 
