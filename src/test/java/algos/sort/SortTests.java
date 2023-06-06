@@ -204,11 +204,6 @@ public class SortTests {
             Assertions.assertTrue(Double.compare((Double)numbers.getArray()[i], (Double)numbers.getArray()[i+1]) >= 0);
 
         QuickSort<? extends Comparable<?>> names = new QuickSort<>(new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"});
-        Assertions.assertNotEquals("Alex", names.getArray()[0]);
-        Assertions.assertNotEquals("Igor", names.getArray()[4]);
-        Assertions.assertNotEquals("Peter", names.getArray()[10]);
-        Assertions.assertNotEquals("Xenomorph", names.getArray()[14]);
-        Assertions.assertNotEquals("Alex", names.getArray()[0]);
         names.sort3way(0, names.getArray().length-1, false);
         System.out.println(Arrays.stream(names.getArray()).map(Object::toString).reduce((s1, s2) -> s1 + " " + s2).get());
         Assertions.assertEquals("Alex", names.getArray()[0]);

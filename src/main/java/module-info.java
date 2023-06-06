@@ -1,5 +1,4 @@
 module algos {
-    requires lombok;
     exports algos.cannibals;
     exports algos.constraint;
     exports algos.datastructure;
