@@ -4,6 +4,7 @@
 package algos.sort;
 
 import java.util.Arrays;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -374,15 +375,72 @@ public class SortTests {
 
     @Test
     public void heapSortTest() {
+    	
+    	Double[] empty = new Double[]{};
+        //Assertions.assertFalse(numbers[0] < numbers[1]);        
+        HeapSort.sort(empty, false);
+        for (int i = 0; i < empty.length-1; i++)
+            Assertions.assertTrue(empty[i] <= empty[i+1]);
+        HeapSort.sort(empty, true);
+        for (int i = 0; i < empty.length-1; i++)
+            Assertions.assertTrue(empty[i] >= empty[i+1]);
+    	
+    	Double[] number = new Double[]{13d};
+        //Assertions.assertFalse(numbers[0] < numbers[1]);        
+        HeapSort.sort(number, false);
+        for (int i = 0; i < number.length-1; i++)
+            Assertions.assertTrue(number[i] <= number[i+1]);
+        HeapSort.sort(number, true);
+        for (int i = 0; i < number.length-1; i++)
+            Assertions.assertTrue(number[i] >= number[i+1]);
+        
+        Double[] twoNumbers = new Double[]{13d, 44d};
+        //Assertions.assertFalse(numbers[0] < numbers[1]);        
+        HeapSort.sort(twoNumbers, false);
+        for (int i = 0; i < twoNumbers.length-1; i++)
+            Assertions.assertTrue(twoNumbers[i] <= twoNumbers[i+1]);
+        HeapSort.sort(twoNumbers, true);
+        for (int i = 0; i < twoNumbers.length-1; i++)
+            Assertions.assertTrue(twoNumbers[i] >= twoNumbers[i+1]);
+        
+        Double[] twoNumbersRev = new Double[]{44d, 13d};
+        //Assertions.assertFalse(numbers[0] < numbers[1]);        
+        HeapSort.sort(twoNumbersRev, false);
+        for (int i = 0; i < twoNumbersRev.length-1; i++)
+            Assertions.assertTrue(twoNumbersRev[i] <= twoNumbersRev[i+1]);
+        HeapSort.sort(twoNumbersRev, true);
+        for (int i = 0; i < twoNumbersRev.length-1; i++)
+            Assertions.assertTrue(twoNumbersRev[i] >= twoNumbersRev[i+1]);
+        
+        Double[] twoNumbersEq = new Double[]{44d, 44d};
+        //Assertions.assertFalse(numbers[0] < numbers[1]);        
+        HeapSort.sort(twoNumbersEq, false);
+        for (int i = 0; i < twoNumbersEq.length-1; i++)
+            Assertions.assertTrue(twoNumbersEq[i] <= twoNumbersEq[i+1]);
+        HeapSort.sort(twoNumbersEq, true);
+        for (int i = 0; i < twoNumbersEq.length-1; i++)
+            Assertions.assertTrue(twoNumbersEq[i] >= twoNumbersEq[i+1]);
+    	
         Double[] numbers = new Double[]{13d, 44d, 3d, 6d, 66d, 89d, 86d, 34d, 41d, 10d, 9d, 29d};
-        //Assertions.assertFalse(numbers[0] < numbers[1]);
-
+        //Assertions.assertFalse(numbers[0] < numbers[1]);        
         HeapSort.sort(numbers, false);
         for (int i = 0; i < numbers.length-1; i++)
             Assertions.assertTrue(numbers[i] <= numbers[i+1]);
         HeapSort.sort(numbers, true);
         for (int i = 0; i < numbers.length-1; i++)
             Assertions.assertTrue(numbers[i] >= numbers[i+1]);
+        
+        int theMany = 1_999_999;
+        Double[] manyNumbers = new Double[theMany];
+        for (int i = 0; i < theMany; i++) {
+        	manyNumbers[i] = 1000d * ThreadLocalRandom.current().nextDouble(.0001d, 1_000.0d);
+        }
+        HeapSort.sort(manyNumbers, false);
+        for (int i = 0; i < manyNumbers.length-1; i++)
+            Assertions.assertTrue(manyNumbers[i] <= manyNumbers[i+1]);
+        HeapSort.sort(manyNumbers, true);
+        for (int i = 0; i < manyNumbers.length-1; i++)
+            Assertions.assertTrue(manyNumbers[i] >= manyNumbers[i+1]);
 
         String[] names = new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"};
         Assertions.assertNotEquals("Alex", names[0]);
