@@ -2,6 +2,7 @@ package algos.recursion;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.stream.LongStream;
 
 import org.junit.jupiter.api.Assertions;
@@ -11,13 +12,13 @@ public class RecursiveFunctionsTests {
 
 	@Test
 	public void fibbonacchiTest() {
-		System.out.println("Factorial");
 		int input = 9;
-		System.out.println("Factorial of " + input + " is " + RecursiveFunctions.factorial(input));
+		int factorial = RecursiveFunctions.factorial(input);
+		Assertions.assertEquals(362880, factorial);
 	}
 
 	@Test
-	public void fibbonacciCamparativeTest() {
+	public void fibbonacciComparativeTest() {
 		LocalDateTime start = LocalDateTime.now();
 
 		Assertions.assertEquals(483944808890094715L, new RecursiveFunctions.Fibbonacci().iterativeFibbonacci(4000));
@@ -49,5 +50,16 @@ public class RecursiveFunctionsTests {
 		for (int i = 1; i < 45; i++) System.out.print(RecursiveFunctions.triangleNumberRecursive(i) + " ");
 		System.out.println();
 		for (int i = 1; i < 45; i++) System.out.print(RecursiveFunctions.triangleNumber(i) + " ");
+	}
+	
+	@Test
+	void factorialArraysParrallelTest() {
+		double[] array = new double[9];
+		Arrays.parallelSetAll(array, i -> i + 1);
+		for (int n = 0; n < array.length; n++) Assertions.assertEquals(n + 1, array[n]);
+		Arrays.parallelPrefix(array, (x1, x2) -> x1 * x2);
+		for (double d : array) System.out.println(d + " ");
+		for (int n = 0; n < array.length; n++) Assertions.assertEquals(array[n], RecursiveFunctions.factorial(n + 1));
+		
 	}
 }
