@@ -1,5 +1,6 @@
 package algos.datastructure;
 
+import java.util.NoSuchElementException;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.junit.jupiter.api.Assertions;
@@ -17,8 +18,12 @@ public class BinaryHeapTest {
 		for (int i = 0; i < countOfElements; i += 2) {
 			Assertions.assertTrue(bh.delMax() >= bh.delMax());
 		}
-		for (int i = 0; i < 100; i++)
-			Assertions.assertDoesNotThrow(() -> bh.delMax(), "impossible!");
+		while (bh.hasNext()) {
+			Assertions.assertNotNull(bh.delMax());
+		}
+		for (int i = 0; i < 10; i++) {
+			Assertions.assertThrows(NoSuchElementException.class, () -> bh.delMax());
+		}
 	}
 
 }

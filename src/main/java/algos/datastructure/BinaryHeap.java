@@ -30,6 +30,10 @@ public final class BinaryHeap<T extends Comparable<T>> {
 		this.priorityQueue = (T[]) new Comparable[1];
 		this.minPriorityElementIndex = 0;
 	}
+	
+	public boolean hasNext() {
+		return minPriorityElementIndex > 0;
+	}
 
 	public void insert(T key) {
 
@@ -42,8 +46,8 @@ public final class BinaryHeap<T extends Comparable<T>> {
 		// It simply adds space in the priority queue.
 		if (minPriorityElementIndex == priorityQueue.length - 1) {
 			T[] biggerPriorityQueue = (T[]) new Comparable[priorityQueue.length * 2];
-			for (int j = 1; j <= minPriorityElementIndex; j++)
-				biggerPriorityQueue[j] = priorityQueue[j];
+//			for (int j = 1; j <= minPriorityElementIndex; j++)
+//				biggerPriorityQueue[j] = priorityQueue[j];
 			System.arraycopy(priorityQueue, 1, biggerPriorityQueue, 1, priorityQueue.length - 1);
 			priorityQueue = biggerPriorityQueue;
 		}
@@ -111,8 +115,11 @@ public final class BinaryHeap<T extends Comparable<T>> {
 			throw new NoSuchElementException();
 		T max = priorityQueue[1]; // Step 1
 		
-		if (minPriorityElementIndex == 1)
+		if (minPriorityElementIndex == 1) {
+			minPriorityElementIndex = 0;
+			priorityQueue[minPriorityElementIndex + 1] = null;
 			return max;
+		}
 		
 		swap(1, minPriorityElementIndex--); // Step 2
 		sink(1); // Step 3
