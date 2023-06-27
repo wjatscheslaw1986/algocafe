@@ -4,7 +4,15 @@
 package algos.sort;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.FutureTask;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -328,13 +336,13 @@ public class SortTests {
         Assertions.assertNotEquals("Igor", names[4]);
         Assertions.assertNotEquals("Peter", names[10]);
         Assertions.assertNotEquals("Xenomorph", names[14]);
-        Assertions.assertNotEquals("Alex", names[0]);
+        Assertions.assertNotEquals("Nikolay", names[8]);
         MergeSort<String> qss = new MergeSort<>(names, false);
         Assertions.assertEquals("Alex", names[0]);
         Assertions.assertEquals("Igor", names[4]);
         Assertions.assertEquals("Peter", names[10]);
         Assertions.assertEquals("Xenomorph", names[14]);
-        Assertions.assertEquals("Alex", names[0]);
+        Assertions.assertEquals("Nikolay", names[8]);
         qss = new MergeSort<>(names, true);
         Assertions.assertEquals("Xenomorph", names[0]);
         Assertions.assertEquals("Vladimir", names[1]);
@@ -371,6 +379,48 @@ public class SortTests {
         Assertions.assertEquals("Xenomorph", names[0]);
         Assertions.assertEquals("Vladimir", names[1]);
         Assertions.assertEquals("Timofey", names[2]);
+    }
+    
+    @Test
+    public void nonRecursiveParallelMergeSortTest() {
+        Double[] numbers = new Double[]{44d, 3d, 6d, 66d, 89d, 86d, 34d, 41d, 10d, 9d, 29d};
+        //Double[] numbers = new Double[]{44d, 3d,  89d, 66d, 6d};
+        Assertions.assertFalse(numbers[0] < numbers[1]);
+
+        //ForkJoinPool pool = new ForkJoinPool();
+        ThreadPoolExecutor pool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        LoopMergeSort<Double> ms = new LoopMergeSort<>(numbers, false, pool);
+        Assertions.assertEquals(0, pool.getActiveCount());
+
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] < numbers[i+1]);
+        pool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        ms = new LoopMergeSort<>(numbers, true, pool);
+        for (int i = 0; i < numbers.length-1; i++)
+            Assertions.assertTrue(numbers[i] > numbers[i+1]);
+
+        String[] names = new String[]{"Dmitri", "Vladimir", "Oleg", "Evgen", "Nikolay", "Alex", "Robert", "Igor", "Konstantine", "Xenomorph", "Leonide", "Timofey", "Mikhael", "Boris", "Peter"};
+        Assertions.assertNotEquals("Alex", names[0]);
+        Assertions.assertNotEquals("Igor", names[4]);
+        Assertions.assertNotEquals("Peter", names[10]);
+        Assertions.assertNotEquals("Xenomorph", names[14]);
+        Assertions.assertNotEquals("Alex", names[0]);
+        pool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        new LoopMergeSort<>(names, false, pool);
+        Assertions.assertEquals(0, pool.getActiveCount());
+        Assertions.assertEquals("Alex", names[0]);
+        Assertions.assertEquals("Igor", names[4]);
+        Assertions.assertEquals("Peter", names[10]);
+        Assertions.assertEquals("Xenomorph", names[14]);
+        Assertions.assertEquals("Alex", names[0]);
+        pool = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        new LoopMergeSort<>(names, true, pool);
+        Assertions.assertEquals(0, pool.getActiveCount());
+        Assertions.assertEquals("Xenomorph", names[0]);
+        Assertions.assertEquals("Vladimir", names[1]);
+        Assertions.assertEquals("Timofey", names[2]);
+        
+        //Assertions.assertEquals(8, pool.getActiveThreadCount());
     }
 
     @Test
@@ -447,13 +497,13 @@ public class SortTests {
         Assertions.assertNotEquals("Igor", names[4]);
         Assertions.assertNotEquals("Peter", names[10]);
         Assertions.assertNotEquals("Xenomorph", names[14]);
-        Assertions.assertNotEquals("Alex", names[0]);
+        Assertions.assertNotEquals("Nikolay", names[8]);
         HeapSort.sort(names, false);
         Assertions.assertEquals("Alex", names[0]);
         Assertions.assertEquals("Igor", names[4]);
         Assertions.assertEquals("Peter", names[10]);
         Assertions.assertEquals("Xenomorph", names[14]);
-        Assertions.assertEquals("Alex", names[0]);
+        Assertions.assertEquals("Nikolay", names[8]);
         HeapSort.sort(names, true);
         Assertions.assertEquals("Xenomorph", names[0]);
         Assertions.assertEquals("Vladimir", names[1]);
