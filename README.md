@@ -1,4 +1,4 @@
-# algoheaven
+# algocafe
 
 ## Algorithms and data structures
 
