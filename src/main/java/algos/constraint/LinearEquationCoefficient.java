@@ -1,7 +1,6 @@
 /*
  * Copyright © 2023. Viacheslav Mikhailov https://github.com/vjatscheslaw
  */
-
 package algos.constraint;
 
 import java.util.Objects;

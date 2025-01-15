@@ -1,4 +1,5 @@
-// MODIFIED BY VIACHESLAV MIKHAILOV
+// MODIFIED by Viacheslav Mikhailov
+//
 // From Classic Computer Science Problems in Java
 // Copyright 2020 David Kopec
 //

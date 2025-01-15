@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -88,11 +90,13 @@ public class SortTests {
 		Assertions.assertNotEquals("Alex", names[0]);
 		Assertions.assertNotEquals("Igor", names[4]);
 		Assertions.assertNotEquals("Peter", names[10]);
-		System.out.println(Arrays.stream(ShellSort.sort(names, false)).reduce((s1, s2) -> s1 + " " + s2).get());
+		System.out.println(Arrays.stream(ShellSort.sort(names, false, ShellSort.StepGenerator.KNUTH))
+				.reduce((s1, s2) -> s1 + " " + s2).get());
 		Assertions.assertEquals("Alex", names[0]);
 		Assertions.assertEquals("Igor", names[4]);
 		Assertions.assertEquals("Peter", names[10]);
-		System.out.println(Arrays.stream(ShellSort.sort(names, true)).reduce((s1, s2) -> s1 + " " + s2).get());
+		System.out.println(Arrays.stream(ShellSort.sort(names, true, ShellSort.StepGenerator.KNUTH))
+				.reduce((s1, s2) -> s1 + " " + s2).get());
 		Assertions.assertEquals("Xenomorph", names[0]);
 		Assertions.assertEquals("Alex", names[14]);
 
@@ -507,12 +511,12 @@ public class SortTests {
 	@Test
 	void compareParallelMergeSortWithParallelTimSortAndSomeOthersTest() {
 		int linesScanned = 0;
-		
-		//Uncomment these lines to download a book
+
+		// Uncomment these lines to download a book
 //		try {
 //			linesScanned = downloadWarAndPeaceByLeoTolstoyToFile();
 //			System.out.println("Downloaded the book of " + linesScanned + " words.");
-//		} catch (IOException e) {
+//		} catch (IOException | URISyntaxException e) {
 //			Assertions.fail("Failed to download e-book.\n" + e.getLocalizedMessage());
 //		}
 
@@ -651,13 +655,13 @@ public class SortTests {
 						() -> Assertions.assertArrayEquals(array2, array6, "Arrays 2 and 6 aren't equal"),
 						() -> Assertions.assertArrayEquals(array2, array7, "Arrays 2 and 7 aren't equal"),
 						() -> Assertions.assertArrayEquals(array2, array8, "Arrays 2 and 8 aren't equal"),
-						() -> Assertions.assertArrayEquals(array2, array9, "Arrays 2 and 9 aren't equal")
-						));
+						() -> Assertions.assertArrayEquals(array2, array9, "Arrays 2 and 9 aren't equal")));
 	}
 
-	private int downloadWarAndPeaceByLeoTolstoyToFile() throws IOException {
+	private int downloadWarAndPeaceByLeoTolstoyToFile() throws IOException, URISyntaxException {
 		int linesScanned = 0;
-		try (Scanner scanner = new Scanner(new URL("https://gutenberg.org/cache/epub/2600/pg2600.txt").openStream());
+		try (Scanner scanner = new Scanner(
+				new URI("https://gutenberg.org/cache/epub/2600/pg2600.txt").toURL().openStream());
 				PrintWriter pw = new PrintWriter(new FileWriter(Paths.get("/tmp/war_and_peace.txt").toFile()))) {
 			while (scanner.hasNext()) {
 				pw.write(scanner.next() + " \n");
