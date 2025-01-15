@@ -43,7 +43,7 @@ public class LoopMergeSort<E extends Comparable<E>> {
 	}
 
 	private void parallelSort(ThreadPoolExecutor pool) {
-		int parallelism = 4;
+		int parallelism = Integer.MAX_VALUE;
 		Semaphore smphr = new Semaphore(parallelism);
 //		AtomicInteger n = new AtomicInteger(4);
 		Outer:
@@ -67,6 +67,12 @@ public class LoopMergeSort<E extends Comparable<E>> {
 			}
 //			long processorBurnCount = 0L; 
 			while (smphr.availablePermits() < parallelism) {
+//				try {
+//					Thread.sleep(10);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 //				processorBurnCount++;
 			}
 //			System.out.println("ProcBurnCount " + processorBurnCount);
